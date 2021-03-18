@@ -49,7 +49,7 @@ public class MiningSimulation {
 
     @Test
     public void simulate51PercentAttack1() {
-        Miner attacker = new CompliantMiner("Attacker", 520, 1);
+        Miner attacker = new MajorityMiner("Attacker", 520, 1);
         Miner miner2 = new CompliantMiner("Miner2", 200, 1);
         Miner miner3 = new CompliantMiner("Miner3", 130, 1);
         Miner miner4 = new CompliantMiner("Miner4", 90, 1);
@@ -64,7 +64,7 @@ public class MiningSimulation {
         Assertions.assertThat(relativeProfits.get(attacker.getId())).isGreaterThan(.55);
     }
 
-/*
+
     @Test
     public void simulate51PercentAttack2() {
         Miner attacker = new MajorityMiner("Attacker", 550, 1);
@@ -80,7 +80,7 @@ public class MiningSimulation {
         Map<String, Double> relativeProfits = runSimulation(miners, BlockReward.ONE, churn);
         Assertions.assertThat(relativeProfits.get(attacker.getId())).isGreaterThan(.6);
     }
-
+/*
     @Test
     public void simulateSelfishMining1() {
         Miner attacker = new SelfishMiner("Attacker", 34, 1);
