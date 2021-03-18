@@ -2,6 +2,7 @@ package edu.stanford.crypto.cs251.miners;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.crypto.cs251.blockchain.*;
+import org.fest.assertions.Assertions;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +47,9 @@ public class MiningSimulation {
         runSimulation(miners, BlockReward.ONE, churn);
     }
 
-
-    //TODO: Uncomment this part when testing your miners.
-/*    @Test
+    @Test
     public void simulate51PercentAttack1() {
-        Miner attacker = new MajorityMiner("Attacker", 520, 1);
+        Miner attacker = new CompliantMiner("Attacker", 520, 1);
         Miner miner2 = new CompliantMiner("Miner2", 200, 1);
         Miner miner3 = new CompliantMiner("Miner3", 130, 1);
         Miner miner4 = new CompliantMiner("Miner4", 90, 1);
@@ -60,10 +59,12 @@ public class MiningSimulation {
         ImmutableList<Miner> miners = ImmutableList.of(attacker, miner2, miner3, miner4, miner5, miner6);
         SimulationRandom rng = new SimulationRandom(1234);
         ChurnFunction churn = new NormalChurnFunction(3, 1,rng);
+        LOGGER.info("\n51% Attack Test 1");
         Map<String, Double> relativeProfits = runSimulation(miners, BlockReward.ONE, churn);
         Assertions.assertThat(relativeProfits.get(attacker.getId())).isGreaterThan(.55);
     }
 
+/*
     @Test
     public void simulate51PercentAttack2() {
         Miner attacker = new MajorityMiner("Attacker", 550, 1);

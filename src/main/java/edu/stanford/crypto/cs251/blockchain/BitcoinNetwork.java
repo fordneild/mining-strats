@@ -53,13 +53,13 @@ public class BitcoinNetwork {
                 NetworkStatistics networkStatistics = churnFunction.churnNetwork(orphanRate, miners);
                 miners.forEach(m -> m.networkUpdate(networkStatistics));
             }
-            List<Entry<Miner, Double>> winnningMiners = miners.stream()
+            List<Entry<Miner, Double>> winningMiners = miners.stream()
                     .map(m -> new SimpleEntry<>(m, miningRNG.sampleExponential(m.getHashRate())))
                     .sorted(Comparator.comparing(Entry::getValue))
                     .collect(Collectors.toList());
             Map<BlockMessage, Double> initialMessages = new HashMap<>(miners.size());
             double currentOrphanProbability = singleOrphanRate;
-            for (Entry<Miner, Double> winner : winnningMiners) {
+            for (Entry<Miner, Double> winner : winningMiners) {
                 Miner winningMiner = winner.getKey();
                 Block previousBlock = winningMiner.currentlyMiningAt();
                 double reward = blockReward.computeBlockReward(previousBlock.getHeight() + 1, winner.getValue());
