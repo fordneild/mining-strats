@@ -26,6 +26,7 @@ public class MiningSimulation {
         Miner miner6 = new CompliantMiner("Miner6", 5, 1);
 
         ImmutableList<Miner> miners = ImmutableList.of(miner1, miner2, miner3, miner4, miner5, miner6);
+        LOGGER.info("\nCompliant Miners Test");
         runSimulation(miners, BlockReward.ONE, ChurnFunction.NO_CHURN);
     }
 
@@ -41,6 +42,7 @@ public class MiningSimulation {
         ImmutableList<Miner> miners = ImmutableList.of(miner1, miner2, miner3, miner4, miner5, miner6);
         SimulationRandom rng = new SimulationRandom(4567);
         ChurnFunction churn = new NormalChurnFunction(1, 1, rng);
+        LOGGER.info("\nDifferent Network Powers Test");
         runSimulation(miners, BlockReward.ONE, churn);
     }
 
