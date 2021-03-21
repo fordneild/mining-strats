@@ -29,11 +29,11 @@ public class SelfishMiner extends BaseMiner implements Miner {
             numWithheld++;
             this.withheldBlock = block;
             // maybe just take advantage of our lead
-            if(numWithheld > 1){
-                this.currentHead = this.withheldBlock;
-                this.withheldBlock = null;
-                this.numWithheld = 0;
-            }
+            // if(numWithheld > 1){
+            //     this.currentHead = this.withheldBlock;
+            //     this.withheldBlock = null;
+            //     this.numWithheld = 0;
+            // }
         }
         else{
             if(block != null){
