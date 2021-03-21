@@ -24,10 +24,10 @@ public class MajorityMiner extends BaseMiner implements Miner {
         return currentHead;
     }
 
-    @Override
-    public Block currentHead() {
-        return currentHead;
-    }
+@Override
+public Block currentHead() {
+    return currentHead;
+}
 
 
 

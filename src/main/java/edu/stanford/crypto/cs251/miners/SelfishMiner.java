@@ -28,27 +28,34 @@ public class SelfishMiner extends BaseMiner implements Miner {
 
     @Override
     public void blockMined(Block block, boolean isMinerMe) {
-        if(isMinerMe) {
+        Block curBlock;
+        int curNumWithHeld;
+        if(isMinerMe == true) {
             numWithheld++;
             this.withheldBlock = block;
-        }else{
-            if(block != null){
-                int withheldHeight = this.numWithheld + this.currentHead.getHeight();
-
-                if(this.withheldBlock == null || withheldHeight < block.getHeight()){
-                    //give up and switch to thier block
-                    this.currentHead = block;
-                }else{
-                    // publish
-                    // loop back over blocks until we find the min one that beats ur chain
-                    this.currentHead = this.withheldBlock;
-                }
-                if(this.numWithheld>2){
-
-                }
+        }
+        if(isMinerMe == false && block != null){
+            if(this.withheldBlock == null || this.withheldBlock.getHeight() < block.getHeight()){
+                this.currentHead = block;
                 this.withheldBlock = null;
                 this.numWithheld = 0;
+            }else{
+                curBlock  = this.withheldBlock;
+                curNumWithHeld = this.numWithheld;
+                while(curNumWithHeld > 0 && curBlock.getPreviousBlock() != null){
+                    if(curBlock.getHeight() - 1 <= block.getHeight()){
+                        break;
+                    }
+                    curBlock = curBlock.getPreviousBlock();
+                    curNumWithHeld--;
+                }
+                this.currentHead = curBlock;
+                this.numWithheld = this.numWithheld - curNumWithHeld;
+                if(numWithheld == 0){
+                    this.withheldBlock = null;
+                }
             }
+            
         }
     }
 
