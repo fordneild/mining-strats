@@ -31,21 +31,22 @@ public class SelfishMiner extends BaseMiner implements Miner {
         if(isMinerMe) {
             numWithheld++;
             this.withheldBlock = block;
-        }else{
+        } else {
             if(block != null){
                 int withheldHeight = this.numWithheld + this.currentHead.getHeight();
 
                 if(this.withheldBlock == null || withheldHeight < block.getHeight()){
-                    //give up and switch to thier block
+                    //give up and switch to their block
                     this.currentHead = block;
-                }else{
+                } else {
                     // publish
                     // loop back over blocks until we find the min one that beats ur chain
+                    while (this.withheldBlock.getPreviousBlock() != null) {
+
+                    }
                     this.currentHead = this.withheldBlock;
                 }
-                if(this.numWithheld>2){
 
-                }
                 this.withheldBlock = null;
                 this.numWithheld = 0;
             }
