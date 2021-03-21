@@ -61,7 +61,7 @@ public class MiningSimulation {
         ChurnFunction churn = new NormalChurnFunction(3, 1,rng);
         LOGGER.info("\n51% Attack Test 1");
         Map<String, Double> relativeProfits = runSimulation(miners, BlockReward.ONE, churn);
-        //Assertions.assertThat(relativeProfits.get(attacker.getId())).isGreaterThan(.55);
+        Assertions.assertThat(relativeProfits.get(attacker.getId())).isGreaterThan(.55);
     }
 
     @Test
