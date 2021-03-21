@@ -1,10 +1,10 @@
-package edu.stanford.crypto.cs251.miners;
+package cs441641.miners;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.stanford.crypto.cs251.blockchain.Block;
-import edu.stanford.crypto.cs251.blockchain.NetworkStatistics;
+import cs441641.blockchain.Block;
+import cs441641.blockchain.NetworkStatistics;
 
 public class MajorityMiner extends BaseMiner implements Miner {
     private Block currentHead;
