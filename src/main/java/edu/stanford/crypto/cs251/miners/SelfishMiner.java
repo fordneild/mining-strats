@@ -3,10 +3,9 @@ package edu.stanford.crypto.cs251.miners;
 import edu.stanford.crypto.cs251.blockchain.Block;
 import edu.stanford.crypto.cs251.blockchain.NetworkStatistics;
 
-public class SelfishMiner extends BaseMiner implements Miner {
-    private Block currentHead;
-    private Block withheldBlock;
-    private int numWithheld;
+public class SelfishMiner extends BaseMiner {
+    private Block publicHead;
+    private Block privateHead;
 
     public SelfishMiner(String id, int hashRate, int connectivity) {
         super(id, hashRate, connectivity);
@@ -15,58 +14,54 @@ public class SelfishMiner extends BaseMiner implements Miner {
 
     @Override
     public Block currentlyMiningAt() {
-        if(this.withheldBlock != null){
-            return this.withheldBlock;
-        }
-        return this.currentHead;
+        return this.privateHead;
     }
 
     @Override
     public Block currentHead() {
-        return currentHead;
+        // if(this.getNumWithheld() > 2){
+        //     this.publicHead = this.privateHead;
+
+        // }
+        return this.publicHead;
     }
 
     @Override
-    public void blockMined(Block block, boolean isMinerMe) {
-        Block curBlock;
-        int curNumWithHeld;
+    public void blockMined(Block newBlock, boolean isMinerMe) {
         if(isMinerMe == true) {
-            numWithheld++;
-            this.withheldBlock = block;
-        }
-        if(isMinerMe == false && block != null){
-            if(this.withheldBlock == null || this.withheldBlock.getHeight() < block.getHeight()){
-                this.currentHead = block;
-                this.withheldBlock = null;
-                this.numWithheld = 0;
-            }else{
-                curBlock  = this.withheldBlock;
-                curNumWithHeld = this.numWithheld;
-                while(curNumWithHeld > 0 && curBlock.getPreviousBlock() != null){
-                    if(curBlock.getHeight() - 1 <= block.getHeight()){
-                        break;
+            if (newBlock.getHeight() > this.privateHead.getHeight()) {
+                this.privateHead = newBlock;
+            }
+        }else{
+            if(newBlock != null && newBlock.getHeight() >= this.publicHead.getHeight()){
+                if(newBlock.getHeight() > this.privateHead.getHeight()){
+                    this.privateHead = newBlock;
+                    this.publicHead = newBlock;
+                }else{
+                    int lead = newBlock.getHeight() - this.privateHead.getHeight();
+                    this.publicHead = this.privateHead;
+                    while(lead > 1 && this.publicHead.getPreviousBlock() != null){
+                        this.publicHead = this.publicHead.getPreviousBlock();
+                        lead--;
                     }
-                    curBlock = curBlock.getPreviousBlock();
-                    curNumWithHeld--;
-                }
-                this.currentHead = curBlock;
-                this.numWithheld = this.numWithheld - curNumWithHeld;
-                if(numWithheld == 0){
-                    this.withheldBlock = null;
                 }
             }
-            
         }
-    }
+}
 
 
     @Override
     public void initialize(Block genesis, NetworkStatistics networkStatistics) {
-        this.currentHead = genesis;
+        this.publicHead = genesis;
+        this.privateHead = genesis;
     }
 
     @Override
     public void networkUpdate(NetworkStatistics statistics) {
 
+    }
+
+    private int getNumWithheld(){
+        return this.privateHead.getHeight() - this.publicHead.getHeight();
     }
 }
