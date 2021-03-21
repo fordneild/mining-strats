@@ -6,11 +6,11 @@ import java.util.List;
 import edu.stanford.crypto.cs251.blockchain.Block;
 import edu.stanford.crypto.cs251.blockchain.NetworkStatistics;
 
-public class SelfishMiner extends BaseMiner implements Miner {
+public class FeeSnipingMiner extends BaseMiner implements Miner {
     private Block currentHead;
     private List<Block> myOldBlocks;
 
-    public SelfishMiner(String id, int hashRate, int connectivity) {
+    public FeeSnipingMiner(String id, int hashRate, int connectivity) {
         super(id, hashRate, connectivity);
         myOldBlocks = new ArrayList<Block>();
 
