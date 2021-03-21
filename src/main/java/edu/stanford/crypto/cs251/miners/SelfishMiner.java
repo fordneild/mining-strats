@@ -15,7 +15,10 @@ public class SelfishMiner extends BaseMiner implements Miner {
 
     @Override
     public Block currentlyMiningAt() {
-        return currentHead;
+        if(this.withheldBlock != null){
+            return this.withheldBlock;
+        }
+        return this.currentHead;
     }
 
     @Override
@@ -28,24 +31,23 @@ public class SelfishMiner extends BaseMiner implements Miner {
         if(isMinerMe) {
             numWithheld++;
             this.withheldBlock = block;
-            // maybe just take advantage of our lead
-            // if(numWithheld > 1){
-            //     this.currentHead = this.withheldBlock;
-            //     this.withheldBlock = null;
-            //     this.numWithheld = 0;
-            // }
-        }
-        else{
+        }else{
             if(block != null){
                 int withheldHeight = this.numWithheld + this.currentHead.getHeight();
+
                 if(this.withheldBlock == null || withheldHeight < block.getHeight()){
                     //give up and switch to thier block
                     this.currentHead = block;
                 }else{
+                    // publish
+                    // loop back over blocks until we find the min one that beats ur chain
                     this.currentHead = this.withheldBlock;
-                    this.withheldBlock = null;
-                    this.numWithheld = 0;
                 }
+                if(this.numWithheld>2){
+
+                }
+                this.withheldBlock = null;
+                this.numWithheld = 0;
             }
         }
     }
