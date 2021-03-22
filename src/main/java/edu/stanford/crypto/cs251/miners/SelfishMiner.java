@@ -19,10 +19,6 @@ public class SelfishMiner extends BaseMiner {
 
     @Override
     public Block currentHead() {
-        // if(this.getNumWithheld() > 2){
-        //     this.publicHead = this.privateHead;
-
-        // }
         return this.publicHead;
     }
 
@@ -40,7 +36,7 @@ public class SelfishMiner extends BaseMiner {
                 }else{
                     int lead = newBlock.getHeight() - this.privateHead.getHeight();
                     this.publicHead = this.privateHead;
-                    while(lead > 1 && this.publicHead.getPreviousBlock() != null){
+                    while(lead > 0 && this.publicHead.getPreviousBlock() != null){
                         this.publicHead = this.publicHead.getPreviousBlock();
                         lead--;
                     }
