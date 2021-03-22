@@ -29,11 +29,15 @@ public class FeeSnipingMiner extends BaseMiner {
             }
         }
         else{
-            if (currentHead == null) {
-                currentHead = block;
-            } else if (block != null && block.getHeight() > currentHead.getHeight()) {
-                this.currentHead = block;
-
+            if(block != null){
+                if (currentHead == null) {
+                    currentHead = block;
+                }else if (block.getHeight() == currentHead.getHeight() + 1 && this.isBlockProfitable(block)){
+                    // reject it temorarily
+                }else if (block.getHeight() > currentHead.getHeight()) {
+                    // adopt it if its unintresting or too far ahead for us to catch up
+                    this.currentHead = block;
+                }
             }
         }
     }
@@ -47,5 +51,12 @@ public class FeeSnipingMiner extends BaseMiner {
     @Override
     public void networkUpdate(NetworkStatistics statistics) {
 
+    }
+
+    private boolean isBlockProfitable(Block block){
+        if(block.getBlockValue() > 6){
+            return true;
+        }
+        return false;
     }
 }
