@@ -8,19 +8,17 @@ import edu.stanford.crypto.cs251.blockchain.NetworkStatistics;
 
 public class MajorityMiner extends BaseMiner implements Miner {
     private Block currentHead;
-    private List<Block> myOldBlocks;
+    private List<Block> myMinedBlocks;
+    private NetworkStatistics curNetStats;
 
     public MajorityMiner(String id, int hashRate, int connectivity) {
         super(id, hashRate, connectivity);
-        myOldBlocks = new ArrayList<Block>();
+        myMinedBlocks = new ArrayList<Block>();
 
     }
 
     @Override
     public Block currentlyMiningAt() {
-        if(this.myOldBlocks.size() > 0){
-            return this.myOldBlocks.get(this.myOldBlocks.size()-1);
-        }
         return currentHead;
     }
 
@@ -34,16 +32,22 @@ public Block currentHead() {
     @Override
     public void blockMined(Block block, boolean isMinerMe) {
         if(isMinerMe) {
-            myOldBlocks.add(block);
-            if (block.getHeight() > currentHead.getHeight()) {
-                this.currentHead = block;
+            //I am the miner and majority
+            if (((double) this.getHashRate() / curNetStats.getTotalHashRate()) > .50) {
+                myMinedBlocks.add(block);
+                this.currentHead = myMinedBlocks.get(myMinedBlocks.size() - 1);
+            } else {
+                if (block.getHeight() > currentHead.getHeight()) {
+                    this.currentHead = block;
+                }
             }
-        }else{
+        } else {
             if (currentHead == null) {
                 currentHead = block;
+            } else if (block != null && ((double) this.getHashRate() / curNetStats.getTotalHashRate() > .50)) {
+                //temporarily reject block
             } else if (block != null && block.getHeight() > currentHead.getHeight()) {
                 this.currentHead = block;
-    
             }
         }
     }
@@ -52,10 +56,11 @@ public Block currentHead() {
     @Override
     public void initialize(Block genesis, NetworkStatistics networkStatistics) {
         this.currentHead = genesis;
-
+        this.curNetStats = networkStatistics;
     }
 
     @Override
     public void networkUpdate(NetworkStatistics statistics) {
+        this.curNetStats = statistics;
     }
 }
