@@ -32,10 +32,10 @@ public class FeeSnipingMiner extends BaseMiner {
             if(block != null){
                 if (currentHead == null) {
                     currentHead = block;
-                }else if (block.getHeight() == currentHead.getHeight() + 1 && this.isBlockProfitable(block)){
-                    // reject it temorarily
-                }else if (block.getHeight() > currentHead.getHeight()) {
-                    // adopt it if its unintresting or too far ahead for us to catch up
+                } else if (block.getHeight() == currentHead.getHeight() + 1 && this.isBlockProfitable(block)){
+                    // reject it temporarily
+                } else if (block.getHeight() > currentHead.getHeight()) {
+                    // adopt it if its uninteresting or too far ahead for us to catch up
                     this.currentHead = block;
                 }
             }
