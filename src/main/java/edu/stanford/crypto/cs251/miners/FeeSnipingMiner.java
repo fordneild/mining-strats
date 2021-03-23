@@ -5,6 +5,7 @@ import edu.stanford.crypto.cs251.blockchain.NetworkStatistics;
 
 public class FeeSnipingMiner extends BaseMiner {
     private Block currentHead;
+    private NetworkStatistics curNetStats;
 
     public FeeSnipingMiner(String id, int hashRate, int connectivity) {
         super(id, hashRate, connectivity);
@@ -43,18 +44,28 @@ public class FeeSnipingMiner extends BaseMiner {
     }
 
 
+
     @Override
     public void initialize(Block genesis, NetworkStatistics networkStatistics) {
         this.currentHead = genesis;
+        this.curNetStats = networkStatistics;
     }
 
     @Override
     public void networkUpdate(NetworkStatistics statistics) {
-
+        this.curNetStats = statistics;
     }
 
     private boolean isBlockProfitable(Block block){
-        if(block.getBlockValue() > 6){
+         double myPercent  = ((double) this.getHashRate() / curNetStats.getTotalHashRate());
+         int limit;
+        //  these are hard coded values discovered through testing
+         if(myPercent >= .27){
+            limit = 25;
+         }else{
+             limit = 50;
+         }
+        if(block.getBlockValue() > limit){
             return true;
         }
         return false;
