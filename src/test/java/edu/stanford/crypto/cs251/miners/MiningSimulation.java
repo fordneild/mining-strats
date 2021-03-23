@@ -151,7 +151,6 @@ public class MiningSimulation {
         double attackerProfits = relativeProfits.get(attacker.getId());
         Assertions.assertThat(attackerProfits).isGreaterThan(.31);
     }
-/*
 
 
     /**
