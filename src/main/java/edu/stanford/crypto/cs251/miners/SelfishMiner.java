@@ -34,7 +34,7 @@ public class SelfishMiner extends BaseMiner {
                     this.privateHead = newBlock;
                     this.publicHead = newBlock;
                 }else{
-                    int lead = newBlock.getHeight() - this.privateHead.getHeight();
+                    int lead =  this.privateHead.getHeight() - newBlock.getHeight();
                     this.publicHead = this.privateHead;
                     while(lead > 0 && this.publicHead.getPreviousBlock() != null){
                         this.publicHead = this.publicHead.getPreviousBlock();
