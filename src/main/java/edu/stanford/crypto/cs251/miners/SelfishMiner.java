@@ -19,11 +19,30 @@ public class SelfishMiner extends BaseMiner {
 
     @Override
     public Block currentHead() {
+        double connectivity = (double) this.getConnectivity() / this.curNetStats.getTotalConnectivity();
+        // int TO_ATTACK = 10;
+        int TO_ATTACK = 5;
+        int lead =  this.privateHead.getHeight() - this.publicHead.getHeight();
+        if(lead > TO_ATTACK){
+            // make the publicHead
+            this.publicHead = this.privateHead;
+            int adv = connectivity > .30 ? 0 : 1;
+            // .30 is arbitrary but it seems to work well for maintaining consistency
+            while(lead > adv && this.publicHead.getPreviousBlock() != null){
+                // announce a new head that is in front of theirs
+                this.publicHead = this.publicHead.getPreviousBlock();
+                lead--;
+            }
+        }
+        
         return this.publicHead;
     }
 
     @Override
     public void blockMined(Block newBlock, boolean isMinerMe) {
+        double connectivity = (double) this.getConnectivity() / this.curNetStats.getTotalConnectivity();
+        // int adv = connectivity > .30 ? 2 : 1;
+        int adv = connectivity > .30 ? 0 : 1;
         if(isMinerMe == true) {
             //if i mined this block
             if (newBlock.getHeight() > this.privateHead.getHeight()) {
@@ -33,19 +52,20 @@ public class SelfishMiner extends BaseMiner {
                 // but i dont publish it
             }
         } else {
-            if (newBlock != null && newBlock.getHeight() > this.publicHead.getHeight()){
+            if (newBlock != null && newBlock.getHeight() >= this.publicHead.getHeight()){
                 // if someone broadcast a new block that is newer than my public head
                 if (newBlock.getHeight() > this.privateHead.getHeight()){
                     // if its also better than my private one, adopt it
                     this.privateHead = newBlock;
                     this.publicHead = newBlock;
-                } else {
+                } else if (connectivity > .30 || newBlock.getHeight() + adv >= this.privateHead.getHeight()){
+                // } else {
                     int lead =  this.privateHead.getHeight() - newBlock.getHeight();
-                    double connectivity = (double) this.getConnectivity() / this.curNetStats.getTotalConnectivity();
                     // make the publicHead
                     this.publicHead = this.privateHead;
-                    //.30 is arbitrary but it seems to work well for maintaining consistency
-                    while(lead > 0 && this.publicHead.getPreviousBlock() != null && connectivity > .30){
+                    // int adv = connectivity > .30 ? 0 : 1;
+                    // .30 is arbitrary but it seems to work well for maintaining consistency
+                    while(lead > adv && this.publicHead.getPreviousBlock() != null){
                         // announce a new head that is in front of theirs
                         this.publicHead = this.publicHead.getPreviousBlock();
                         lead--;
