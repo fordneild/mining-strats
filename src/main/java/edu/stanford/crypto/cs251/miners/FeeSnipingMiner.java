@@ -1,7 +1,7 @@
-package edu.stanford.crypto.cs251.miners;
+package cs441641.miners;
 
-import edu.stanford.crypto.cs251.blockchain.Block;
-import edu.stanford.crypto.cs251.blockchain.NetworkStatistics;
+import cs441641.blockchain.Block;
+import cs441641.blockchain.NetworkStatistics;
 
 public class FeeSnipingMiner extends BaseMiner {
     private Block currentHead;
